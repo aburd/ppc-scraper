@@ -1,11 +1,12 @@
-//var colorizer = require('colorizer').create('Colorizer');
-
 // Initial Declarations
 var links = [],
     descs = [],
     urls = [], 
     yahooLinks = [],
     yahooUrls = [];
+
+// Selector for ad button
+var adButton = '.ads-visurl ._lBb div:nth-child(1)';
 
 var yahoo = {
     textSelect: '.w h3 a',
@@ -32,7 +33,7 @@ casper.start('http://google.co.jp/', function() {
 
 casper.then(function() {
     // aggregate results for the 'casperjs' search
-    casper.waitForSelector('li.ads-ad h3 a', function(){
+    casper.waitForSelector('li.ads-ad h3 a:last-child', function(){
         links = this.evaluate(getInnerHtml, 'li.ads-ad h3 a:last-child');
         urls = this.evaluate(getInnerHtml, 'li.ads-ad cite');
     });
@@ -54,7 +55,7 @@ casper.then(function(){
 casper.run(function() {
     // echo results in some pretty fashion
     this.echo('Google Top 3:', 'ERROR');
-    for(var i = 0; i<3 ; i++){
+    for(var i = 0; i < 3 ; i++){
         this.echo(i + 1 + '. ' + links[i].replace(/<.>|<\/.>/g, ''), 'INFO');
         this.echo(urls[i].replace(/<.>|<\/.>/g, ''));
     }
