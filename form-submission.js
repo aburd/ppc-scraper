@@ -1,5 +1,5 @@
 var urls = ['http://virtualoffice.servcorp.co.jp', 'http://virtualoffice.servcorp.co.jp/en', 'http://virtualoffice.servcorp.co.jp/osaka', 'http://virtualoffice.servcorp.co.jp/osaka/en'];
-var mainUrls = ['http://www.servcorp.co.jp/ja/contact-us'];
+var mainUrls = ['http://www.servcorp.co.jp/ja/contact-us', 'http://www.servcorp.co.jp/en/contact-us'];
 var localUrls = ['http://www.rentaloffice-tokyo.jp/contact_tokyo'];
 
 function startFormVoPage(url) {
@@ -28,33 +28,7 @@ function fillFormVoPage() {
 	});
 }
 
-//Create instance
-var casper = require('casper').create();
-
-//Testing JA VO
-casper.start(urls[0], function(){
-	startFormVoPage(urls[0]);
-});
-
-casper.then(function(){
-	fillFormVoPage();
-});
-
-//Testing EN VO
-casper.thenOpen(urls[1], function(){
-	startFormVoPage(urls[1]);
-})
-
-casper.then(function(){
-	fillFormVoPage();
-})
-
-// Testing JA Main Contact us
-casper.thenOpen(mainUrls[0], function(){
-	casper.echo('Testing ' + mainUrls[0]);
-});
-
-casper.then(function(){
+function fillMainContactPage(){
 	casper.fill('form[method="post"]', {
 		'Product': 'Office',
 		'Country': 'JP',
@@ -79,17 +53,54 @@ casper.then(function(){
 			casper.fill('form[method="post"]', {
 				'Location':'MTT'
 			}, true);
+			
+			casper.wait(1000, function(){
+				casper.echo('Finishing up.');
+			});
 		});
 	
 	});
+}
 
+//Create instance
+var casper = require('casper').create();
+
+//Testing JA VO
+casper.start(urls[0], function(){
+	startFormVoPage(urls[0]);
+});
+casper.then(function(){
+	fillFormVoPage();
+});
+
+//Testing EN VO
+casper.thenOpen(urls[1], function(){
+	startFormVoPage(urls[1]);
+})
+casper.then(function(){
+	fillFormVoPage();
+})
+
+// Testing JA Main Contact us
+casper.thenOpen(mainUrls[0], function(){
+	casper.echo('Testing ' + mainUrls[0]);
+});
+casper.then(function(){
+	fillMainContactPage();
+});
+
+// Testing EN Main Contact us
+casper.thenOpen(mainUrls[1], function(){
+	casper.echo('Testing ' + mainUrls[1]);
+});
+casper.then(function(){
+	fillMainContactPage();
 });
 
 //Testing for Local site
 casper.thenOpen(localUrls[0], function(){
 	casper.echo('Opening ' + localUrls[0] + '...');
 });
-
 casper.then(function(){
 	casper.fill('form[method="post"]', {
 		'ctl00$ctl00$ctl00$ContentPlaceHolderDefault$servcorp_local_contact_form$20130123_keibackup_ServcorpInquiry_13$_contactName': 'test',
