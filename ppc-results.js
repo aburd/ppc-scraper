@@ -40,12 +40,14 @@ casper.then(function() {
     
 });
 
+// Then go to Yahoo!
 casper.thenOpen('http://yahoo.co.jp/').then( function() {
     this.fill('form[name="sf1"]', { p: 'サーブコープ' }, true);
 });
 
 casper.then(function(){
     this.waitForSelector(yahoo.textSelect, function(){
+        this.captureSelector('body.png', 'body')
         yahooLinks = this.evaluate(getInnerHtml, yahoo.textSelect);
         yahooUrls = this.evaluate(getInnerHtml, yahoo.urlSelect)
     })
